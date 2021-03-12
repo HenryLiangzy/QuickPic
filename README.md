@@ -1,4 +1,4 @@
-# Assessment 2 - Vanilla JS: LinkedPic
+# Assessment 2 - Vanilla JS: QuickPic
 
 1. Background & Motivation
 2. The Task (Frontend)
@@ -172,7 +172,7 @@ _No course assistance will be provided for this component, you should do your ow
 
 ## 2.8. Bonus Marks (5%)
 
-An extra 5% of the assignment can be attained via bonus marks, meaning a maximum mark of 105/100. Any bonus marks that extend your ass2 mark above 100% will bleed into other assignment marks, but cannot contribute outside of the 60% of the course that is allocated for assignment marks
+An extra 5% of the assignment can be attained via bonus marks, meaning a maximum mark of 105/100. Any bonus marks that extend your ass2 mark above 100% will bleed into other assignment marks, but cannot contribute outside of the 75% of the course that is allocated for assignment marks
 
 Your bonus feature(s) can be anything. You just have to think of something that could make your web app stand out in some minor or major way. Simple examples would include just making sure that your user interface and user experience stands out amongst other students, maybe through some user testing.
 
@@ -223,8 +223,8 @@ You must implement this assignment in ES6-compliant vanilla javascript. You cann
 ### 4.2. Browser Compatibility
 
 You should ensure that your programs have been tested on one of the following two browsers:
- * Locally, Google Chrome (various operating systems) version 85.XX
- * On CSE machines, Chromium version 83.XX
+ * Locally, Google Chrome (various operating systems) version 88.XX
+ * On CSE machines, Chromium version 87.XX
 
 ### 4.3. External libraries
 
