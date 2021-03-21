@@ -1,2 +1,5 @@
 backend/
 ass2-backend/
+
+# for macOS
+.DS_Store
