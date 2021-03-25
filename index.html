@@ -15,16 +15,37 @@
     <header class="banner">
         <h1>Quickpic</h1>
         <ul class="nav">
-            <li class="nav-item">Item</li>
-            <li class="nav-item">Item</li>
+            <li class="nav-item">Sign Up</li>
+            <li class="nav-item">Sign In</li>
         </ul>
     </header>
-    <main role="main">
+    <main role="main" class="container">
         <!-- app goes here --> 
+        <form action="POST" name="signup">
+            <div class="form-sign-up">
+                <div class="input-field">
+                    <label for="username">Username: </label>
+                    <input type="text" name="username" id="username">
+                </div>
+
+                <div class="input-field">
+                    <label for="password">Password: </label>
+                    <input type="password" name="password" id="password">
+                </div>
+
+                <div class="input-field">
+                    <label for="confirm password">Confirm Password: </label>
+                    <input type="password" name="con-password" id="con-password">
+                </div>
+
+                <div class="input-field"><input type="submit" value="Submit"></div>
+            </div>
+        </form>
     </main>
     <footer>
         <p>&copy; Quickpic</p>
     </footer>
     <script type="module" src="src/main.js"></script>
+    <script src="src/ass2.js"></script>
 </body>
 </html>

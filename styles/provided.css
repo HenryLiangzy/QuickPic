@@ -1,6 +1,6 @@
 
 /* base styles, feel free to edit */
-html, body {
+html {
     margin: 0;
     padding: 0;
     background-color: #fafafa;
@@ -46,3 +46,22 @@ footer {
 }
 
 /* Add your styles here */
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-sign-up{
+    display: grid;
+    flex-direction: column;
+    justify-content: center;
+    width: 400px;
+}
+
+.input-field{
+    display: inline-grid;
+    text-align: right;
+    margin: 3px;
+}
