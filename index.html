@@ -6,46 +6,69 @@
     <title>Quickpic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- You can add your styles and scripts here -->
-    <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" /> -->
     <script type="module" src="src/helpers.js"></script>
     <script type="module" src="src/api.js"></script>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
 </head>
-<body>
+<body class="container">
     <!-- This is an example app structure, you can modify this as much as you choose --> 
-    <header class="banner">
-        <h1>Quickpic</h1>
-        <ul class="nav">
-            <li class="nav-item">Sign Up</li>
-            <li class="nav-item">Sign In</li>
-        </ul>
-    </header>
-    <main role="main" class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <a href="/index.html" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+          <span style="font-family: 'Dancing Script', cursive; font-size: 30px;">Quickpic</span>
+        </a>
+    
+        <div class="col-md-3 text-end">
+          <button type="button" class="btn btn-outline-primary me-2">Login</button>
+          <button type="button" class="btn btn-primary">Sign up</button>
+        </div>
+      </header>
+    <main role="main">
         <!-- app goes here --> 
-        <form action="POST" name="signup">
-            <div class="form-sign-up">
-                <div class="input-field">
-                    <label for="username">Username: </label>
-                    <input type="text" name="username" id="username">
-                </div>
-
-                <div class="input-field">
-                    <label for="password">Password: </label>
-                    <input type="password" name="password" id="password">
-                </div>
-
-                <div class="input-field">
-                    <label for="confirm password">Confirm Password: </label>
-                    <input type="password" name="con-password" id="con-password">
-                </div>
-
-                <div class="input-field"><input type="submit" value="Submit"></div>
+        <div class="row justify-content-md-center">
+            <div class="col-md-8">
+                <figure class="figure">
+                    <img src="..." class="figure-img img-fluid rounded" alt="...">
+                </figure>
             </div>
-        </form>
+            <div class="col-6 col-md-4">
+                <form action="POST" name="signup" class="row g-3">
+                    <h3 class="h3 mb-3 fw-normal text-center">Please sign in</h3>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      </div>
+                      <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="password">
+                        <div id="passwordHelpBlock" class="form-text">
+                            Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" name="confirmPassword" id="confirm_password">
+                        <div id="passwordHelpBlock" class="form-text">
+                            Your confirm password should be same as password
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>            
+        </div>
     </main>
-    <footer>
+    <footer class="footer">
         <p>&copy; Quickpic</p>
     </footer>
+
+    <!-- js stuff -->
     <script type="module" src="src/main.js"></script>
     <script src="src/ass2.js"></script>
+    <script src="src/bootstrap.min.js"></script>
 </body>
 </html>
