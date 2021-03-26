@@ -11,7 +11,7 @@
     <script type="module" src="src/api.js"></script>
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
-
+    <script src="src/bootstrap.min.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
@@ -32,14 +32,13 @@
     </div>
     <main role="main" class=" background-img container">
         <!-- app goes here --> 
-        <div class="row justify-content-md-center bg-transparent">
-
-            <div class="col-6 col-md-4">
-                <form action="POST" name="signup" class="row g-3">
-                    <h3 class="h3 mb-3 fw-normal text-center">Please sign in</h3>
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-3">
+                <form name="signup" class="row g-3">
+                    <h3 class="h3 mb-3 fw-normal text-center">Please Login</h3>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" name="username" id="username">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
@@ -50,7 +49,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" name="confirmPassword" id="confirm_password">
+                        <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
                         <div id="passwordHelpBlock" class="form-text">
                             Your confirm password should be same as password.
                         </div>
@@ -60,6 +59,26 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                       </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Launch static backdrop modal
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" name="modalTile" id="modalTitle">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" name="modalText" id="modalText">
+                        Text
+                    </div>
+                </div>
             </div>
         </div>
     </main>
