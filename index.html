@@ -6,7 +6,7 @@
     <title>Quickpic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- You can add your styles and scripts here -->
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" /> -->
+    <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
     <script type="module" src="src/helpers.js"></script>
     <script type="module" src="src/api.js"></script>
     <!-- Bootstrap -->
@@ -16,54 +16,59 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
 </head>
-<body class="container">
+<body class="d-flex flex-column h-100">
     <!-- This is an example app structure, you can modify this as much as you choose --> 
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-        <a href="/index.html" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-          <span style="font-family: 'Dancing Script', cursive; font-size: 30px;">Quickpic</span>
-        </a>
-    
-        <div class="col-md-3 text-end">
-          <button type="button" class="btn btn-outline-primary me-2">Login</button>
-          <button type="button" class="btn btn-primary">Sign up</button>
-        </div>
-      </header>
-    <main role="main">
-        <!-- app goes here --> 
-        <div class="row justify-content-md-center">
-            <div class="col-md-8">
-                <figure class="figure">
-                    <img src="..." class="figure-img img-fluid rounded" alt="...">
-                </figure>
+    <div class="container">
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+            <a href="/index.html" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+              <span style="font-family: 'Dancing Script', cursive; font-size: 30px;">Quickpic</span>
+            </a>
+        
+            <div class="col-md-3 text-end">
+              <button type="button" class="btn btn-outline-primary me-2">Login</button>
+              <button type="button" class="btn btn-primary">Sign up</button>
             </div>
+        </header>
+    </div>
+    <main role="main" class=" background-img container">
+        <!-- app goes here --> 
+        <div class="row justify-content-md-center bg-transparent">
+
             <div class="col-6 col-md-4">
                 <form action="POST" name="signup" class="row g-3">
                     <h3 class="h3 mb-3 fw-normal text-center">Please sign in</h3>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                      </div>
-                      <div class="mb-3">
+                    </div>
+                    <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" name="password" id="password">
                         <div id="passwordHelpBlock" class="form-text">
-                            Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                            Your password must be 8-20 characters long.
                         </div>
-                      </div>
-                      <div class="mb-3">
+                    </div>
+                    <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Confirm Password</label>
                         <input type="password" class="form-control" name="confirmPassword" id="confirm_password">
                         <div id="passwordHelpBlock" class="form-text">
-                            Your confirm password should be same as password
+                            Your confirm password should be same as password.
                         </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button type="submit" class="btn btn-primary">Submit</button>
                       </div>
-                      <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
-            </div>            
+            </div>
         </div>
     </main>
-    <footer class="footer">
-        <p>&copy; Quickpic</p>
+
+    <!-- footer -->
+    <footer class="footer fixed-bottom mt-auto py-3 bg-light text-center">
+        <div>
+            <span class="text-muted">&copy; Quickpic 2021</span>
+        </div>
     </footer>
 
     <!-- js stuff -->
