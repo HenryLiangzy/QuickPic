@@ -38,9 +38,9 @@ footer {
 }
 
 .nav-item {
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* border: 1px solid rgba(0, 0, 0, 0.1);
     margin: auto;
-    padding: 5px;
+    padding: 5px; */
     display: inline;
     list-style-type: none;
 }
