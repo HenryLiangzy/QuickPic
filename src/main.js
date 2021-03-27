@@ -8,26 +8,12 @@ let myModal = new bootstrap.Modal(document.getElementById('Alert'), {backdrop: t
 const login_button = document.getElementById("login_button");
 const signup_button = document.getElementById("signup_button");
 
-// This url may need to change depending on what port your backend is running
-// on.
 const api = new API('http://localhost:5000');
 
 // Example usage of makeAPIRequest method.
 // api.makeAPIRequest('dummy/user')
 //     .then(r => console.log(r));
 
-
-// const toLogin = () => {
-//     login_form.classList.remove("d-none");
-//     signup_form.classList.add("d-none");
-//     console.log("toLogin()");
-// }
-
-// const toSignUp = () => {
-//     signup_form.classList.remove("d-none");
-//     login_form.classList.add("d-none");
-//     console.log("toSignUp()");
-//}
 
 function toLogin () {
     login_form.classList.remove("d-none");
@@ -63,6 +49,7 @@ const login = (username, password) => {
         if(data.token === undefined){
             showAlert("Login Error", data.message);
         }
+        //login successful
         else{
             console.log(data.token);
         }
@@ -85,3 +72,41 @@ login_form.addEventListener('submit', (event)=>{
         login(username, password);
     }
 })
+
+const signup = (username, password, email, name) => {
+    const signup_info = {
+        "username": username,
+        "password": password,
+        "email": email,
+        "name": name
+    }
+
+    const result = api.sendPostRequest("auth/signup", signup_info).then((data) => {
+        if(data.token === undefined){
+            showAlert("SignUp Error", data.message);
+        }
+        //signup successful
+        else{
+            console.log(data.token);
+        }
+    })
+}
+
+signup_form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const username = signup_form.elements.username.value;
+    const password = signup_form.elements.password.value;
+    const con_password = signup_form.elements.confirmPassword.value;
+    const email = signup_form.elements.email.value;
+    const name = signup_form.elements.name.value;
+    
+    if (password !== con_password) {
+        showAlert("Error", "Confirm password incorrect!");
+    }
+    // if nothing wrong. sign up
+    else{
+        signup(username, password, email, name);
+    }
+})
+

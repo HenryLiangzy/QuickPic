@@ -8,26 +8,6 @@
      .then(res => res.json())
      .catch(err => console.warn(`API_ERROR: ${err.message}`));
 
-// const getJson = (path, options) => 
-// fetch(path, options)
-//     .then(res => res.json())
-//     .catch(err => err.message);
-
-// const get_json = (path, options) => {
-//     const result = fetch(path, options).then((data) => {
-//         console.log("data: ", data);
-//         if(data.status === 200){
-//             data.json().then((res) => {
-//                 return res;
-//             })
-//         }
-//         else{
-//             return data.status;
-//         }
-//     }).catch((err) => {
-//         return err;
-//     })
-// }
 
 /**
  * This is a sample class API which you may base your code on.
