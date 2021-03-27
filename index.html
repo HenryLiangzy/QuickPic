@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Quickpic</title>
+    <title>LinkedPic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- You can add your styles and scripts here -->
     <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
@@ -21,7 +21,7 @@
     <div class="container">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <a href="/index.html" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-              <span style="font-family: 'Dancing Script', cursive; font-size: 30px;">Quickpic</span>
+              <span style="font-family: 'Dancing Script', cursive; font-size: 30px;">LinkedPic</span>
             </a>
         
             <div class="col-md-3 text-end">
@@ -30,11 +30,12 @@
             </div>
         </header>
     </div>
-    <main role="main" class=" background-img container">
+    <main role="main" class="background-img container">
         <!-- app goes here --> 
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-3">
-                <form name="signup" class="row g-3">
+                <!-- Login page -->
+                <form name="login" class="row g-3 d-none">
                     <h3 class="h3 mb-3 fw-normal text-center">Please Login</h3>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
@@ -43,14 +44,41 @@
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" name="password" id="password">
-                        <div id="passwordHelpBlock" class="form-text">
+                        <div class="form-text">
                             Your password must be 8-20 characters long.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Confirm Password</label>
                         <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
-                        <div id="passwordHelpBlock" class="form-text">
+                        <div class="form-text">
+                            Your confirm password should be same as password.
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                </form>
+
+                <!-- signup page -->
+                <form name="signup" class="row g-3 d-block">
+                    <h3 class="h3 mb-3 fw-normal text-center">Sign Up here</h3>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" id="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="password">
+                        <div class="form-text">
+                            Your password must be 8-20 characters long.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
+                        <div class="form-text">
                             Your confirm password should be same as password.
                         </div>
                     </div>
@@ -63,7 +91,7 @@
         </div>
         
         <!-- Alert -->
-        <div class="modal fade" id="myModal" tabindex="-1">
+        <div class="modal fade" id="Alert" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">

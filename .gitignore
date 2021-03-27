@@ -3,3 +3,7 @@ ass2-backend/
 
 # for macOS
 .DS_Store
+
+# for ide
+.idea/
+.vscode/
