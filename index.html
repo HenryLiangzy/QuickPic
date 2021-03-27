@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>LinkedPic</title>
+    <title>QuickPic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- You can add your styles and scripts here -->
     <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
@@ -21,21 +21,21 @@
     <div class="container">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <a href="/index.html" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-              <span style="font-family: 'Dancing Script', cursive; font-size: 30px;">LinkedPic</span>
+              <span style="font-family: 'Dancing Script', cursive; font-size: 30px;">QuickPic</span>
             </a>
         
             <div class="col-md-3 text-end">
-              <button type="button" class="btn btn-outline-primary me-2">Login</button>
-              <button type="button" class="btn btn-primary">Sign up</button>
+              <button type="button" class="btn btn-outline-primary me-2" id="login_button">Login</button>
+              <button type="button" class="btn btn-primary" id="signup_button">Sign up</button>
             </div>
         </header>
     </div>
-    <main role="main" class="background-img container">
+    <main role="main" class="container">
         <!-- app goes here --> 
         <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-3">
+            <div class="col-lg-4 col-md-3" name="sign_page">
                 <!-- Login page -->
-                <form name="login" class="row g-3 d-none">
+                <form name="login" class="row g-3">
                     <h3 class="h3 mb-3 fw-normal text-center">Please Login</h3>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
@@ -62,22 +62,22 @@
                 </form>
 
                 <!-- signup page -->
-                <form name="signup" class="row g-3 d-block">
+                <form name="signup" class="row g-3 d-none">
                     <h3 class="h3 mb-3 fw-normal text-center">Sign Up here</h3>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" name="username" id="username">
+                        <input type="text" class="form-control" name="username">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" id="password">
+                        <input type="password" class="form-control" name="password">
                         <div class="form-text">
                             Your password must be 8-20 characters long.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
+                        <input type="password" class="form-control" name="confirmPassword">
                         <div class="form-text">
                             Your confirm password should be same as password.
                         </div>
@@ -115,7 +115,6 @@
 
     <!-- js stuff -->
     <script type="module" src="src/main.js"></script>
-    <script src="src/ass2.js"></script>
     <script src="src/bootstrap.min.js"></script>
 </body>
 </html>
