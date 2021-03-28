@@ -19,21 +19,28 @@ export default class API {
         this.url = url;
     } 
 
-    /** @param {String} path */
-    makeAPIRequest(path) {
-        return getJSON(`${this.url}/${path}`);
+    /**
+     * 
+     * @param {String} path 
+     * @param {JSON} option 
+     * @returns Promise
+     */
+    makeAPIRequest(path, option) {
+        
+        return getJSON(`${this.url}/${path}`, option);
     }
 
     /** 
      * @param {String} path
      * @param {json} data 
      */
-    sendPostRequest(path, data) {
+    sendPostRequest(path, data, token) {
         let option = {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token
             },
             body: JSON.stringify(data)
         }
@@ -44,7 +51,16 @@ export default class API {
      * @param {String} path
      * @param {json} data
      */
-    sendGetRequest(path, data) {
-        
+    sendGetRequest(path, data, token) {
+        let option = {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(data)
+        }
+        return getJSON(`${this.url}/${path}`, option);
     }
 }

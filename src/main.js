@@ -10,6 +10,7 @@ const signup_button = document.getElementById("signup_button");
 const signOut_button =  document.getElementById("signOut_button");
 
 const api = new API('http://localhost:5000');
+let user_token = undefined;
 
 /**
  * Follow up page control function
@@ -27,12 +28,18 @@ const toSignUp = () => {
     console.log("toSignUp()");
 }
 
+const toSignOut = () => {
+    user_token = undefined;
+
+}
+
 const toDashBoard = () => {
     let nav = document.getElementsByName("dashNav")[0];
 
     nav.classList.remove("d-none");
     document.getElementById("dashBoard").classList.remove("d-none");
     document.getElementById("signPage").classList.add("d-none");
+    
     login_button.classList.add("d-none");
     signup_button.classList.add("d-none");
     signOut_button.classList.remove("d-none");
@@ -48,6 +55,15 @@ const showAlert = (alertTitle, alertText) => {
     document.getElementById("alertText").innerText = alertText;
 
     myModal.show();
+}
+
+
+/**
+ * Construct function
+ */
+const convertTime = (time) => {
+    let newTime = new Date(time * 1000);
+    return newTime.toLocaleString();
 }
 
 
@@ -69,7 +85,9 @@ const login = (username, password) => {
         //login successful
         else{
             console.log(data.token);
+            user_token = data.token;
             toDashBoard();
+            loadFeed(0, 9);
         }
     })
 }
@@ -99,13 +117,14 @@ const signup = (username, password, email, name) => {
         "name": name
     }
 
-    const result = api.sendPostRequest("auth/signup", signup_info).then((data) => {
+    const result = api.sendPostRequest("auth/login", signup_info).then((data) => {
         if(data.token === undefined){
             showAlert("SignUp Error", data.message);
         }
         //signup successful
         else{
             console.log(data.token);
+            user_token = data.token;
             toDashBoard();
         }
     })
@@ -129,6 +148,125 @@ signup_form.addEventListener("submit", (event) => {
     }
 })
 
-const loadPost = () => {
+const constructPost = (author, postTime, image_src, likes, desc, comment_num) => {
+    const postDiv = document.createElement("div");
+    postDiv.className = "card";
 
+    // post heading part
+    const authorDiv = document.createElement("div");
+    authorDiv.className = "card-header";
+
+    const authorBox = document.createElement("h5");
+    authorBox.innerText = author;
+    authorDiv.appendChild(authorBox)
+
+    const timeBox = document.createElement("p");
+    timeBox.className = "text-muted";
+    timeBox.innerText = postTime;
+    authorDiv.appendChild(timeBox);
+
+    postDiv.appendChild(authorDiv);
+
+
+    //image
+    const imageBox = document.createElement("img");
+    imageBox.className = "img-fluid";
+    imageBox.setAttribute("src", `data:image/jpeg;base64,${image_src}`);
+    postDiv.appendChild(imageBox);
+
+    //body part
+    const bodyDiv = document.createElement("div");
+    bodyDiv.className = "card-body";
+
+    // description part
+    const descBox = document.createElement("p");
+    descBox.className = "row card-text text-muted";
+    descBox.innerText = desc;
+    bodyDiv.appendChild(descBox);
+
+    const buttonDiv = document.createElement("div");
+    buttonDiv.className = "d-flex flex-row my-2";
+
+    // for like button and the like numbers
+    const likeButton = document.createElement("button");
+    likeButton.className = "btn btn-outline-primary";
+    likeButton.setAttribute("type", "button");
+    likeButton.innerText = "Like";
+    const badgeBox = document.createElement("span");
+    badgeBox.className = "badge rounded-pill bg-secondary";
+    badgeBox.innerText = likes;
+    likeButton.appendChild(badgeBox);
+
+    buttonDiv.appendChild(likeButton);
+
+    const commentButton = document.createElement("button");
+    commentButton.className = "btn btn-outline-primary";
+    commentButton.setAttribute("type", "button");
+    commentButton.innerText = "Comment";
+    buttonDiv.appendChild(commentButton);
+
+    bodyDiv.appendChild(buttonDiv);
+
+    // for comment
+    const commentBox = document.createElement("p");
+    commentBox.className = "row mt-2 fw-lighter";
+    commentBox.innerText = `There are ${comment_num} comments.`;
+
+    bodyDiv.appendChild(commentBox);
+
+    //final
+    postDiv.appendChild(bodyDiv);
+
+    return postDiv;
 }
+
+const loadFeed = (startPage, postNum) => {
+    const option = {
+        method: "GET",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + user_token,
+            'p': startPage,
+            'n': postNum
+        }
+    }
+
+    const result = api.makeAPIRequest("user/feed", option).then((data) => {
+        if(data.posts === undefined){
+            showAlert("Post Error", data.message);
+        }
+        else{
+            const posts = data.posts;
+            // if not post, load remind page
+            if(posts.length === 0){
+                document.getElementById("noFeed").classList.remove("d-none");
+                document.getElementById("Feed").classList.add("d-none");
+            }
+
+            // if have post
+            else{
+                const feed_area = document.getElementById("Feed");
+                posts.map((post) => {
+                    console.log(post);
+                    const postCard = constructPost(
+                        post.meta.author,
+                        convertTime(post.meta.published),
+                        post.src,
+                        post.meta.likes.length,
+                        post.meta.description_text,
+                        post.comments.length
+                    );
+                    feed_area.appendChild(postCard);
+
+                    const divider = document.createElement("div");
+                    divider.className = "invisible p-2";
+                    divider.innerText = "===";
+                    feed_area.appendChild(divider);
+                })
+            }
+        }
+    })
+}
+
+

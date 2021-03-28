@@ -18,7 +18,11 @@
 </head>
 <body class="d-flex flex-column h-100">
     <!-- This is an example app structure, you can modify this as much as you choose --> 
-    <div class="container">
+    <div class="invisible">
+        <div class="p-5 bg-light border">Grid item 1</div>
+    </div>
+
+    <div class="container fixed-top">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <a href="/index.html" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
                 <span style="font-family: 'Dancing Script', cursive; font-size: 28px;">QuickPic</span>
@@ -29,7 +33,6 @@
                 <li><a href="#" class="nav-link px-2 link-dark">Features</a></li>
                 <li><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
                 <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
-                <li><a href="#" class="nav-link px-2 link-dark">About</a></li>
                 </ul>
         
             <div class="col-md-3 text-end">
@@ -41,25 +44,25 @@
 
     <main role="main" class="container">
         <!-- app goes here --> 
-        <div class="row justify-content-center" id="signPage">
-            <div class="col-lg-4 col-md-3">
+        <div class="row justify-content-center d-flex" id="signPage">
+            <div class="col-md-4 col-sm-auto">
                 <!-- Login page -->
                 <form name="login" class="row g-3">
                     <h3 class="h3 mb-3 fw-normal text-center">Please Login</h3>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" name="username" id="username">
+                        <input type="text" class="form-control" name="username" id="username" value="Sophia">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" id="password">
+                        <input type="password" class="form-control" name="password" id="password" value="cluttered">
                         <div class="form-text">
                             Your password must be 8-20 characters long.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
+                        <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" value="cluttered">
                         <div class="form-text">
                             Your confirm password should be same as password.
                         </div>
@@ -110,14 +113,19 @@
         <!-- dashboard -->
         <div class="row justify-content-center d-none" id="dashBoard">
             <!-- if not feed -->
-            <div class="col-lg-6 col-md-3" name="noFeed">
+            <div class="col-lg-10 col-sm-auto d-none" id="noFeed">
                 <div class="bg-light p-5 rounded">
                     <h1>No post yet</h1>
-                    <p class="lead">Post not found, why not make post now?</p>
-                    <a class="btn btn-outline-success" href="#" role="button">Make Post</a>
+                    <p class="lead">Post not found, why not follow someone?</p>
+                    <a class="btn btn-outline-success" href="#" role="button">To follow</a>
                   </div>
             </div>
+
+            <!-- for the post thumbnail -->
+            <div class="col-lg-8 col-sm-auto" id="Feed">
+            </div>
         </div>
+
     </main>
 
     
@@ -137,8 +145,12 @@
         </div>
     </div>
 
+    <div class="invisible">
+        <div class="p-2 bg-light border">Grid item 1</div>
+    </div>
+
     <!-- footer -->
-    <footer class="footer fixed-bottom mt-auto py-3 bg-light text-center">
+    <footer class="footer fixed-bottom mt-auto py-3 bg-light text-center" id="footer">
         <div>
             <span class="text-muted">&copy; Quickpic 2021</span>
         </div>
