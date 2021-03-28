@@ -21,19 +21,28 @@
     <div class="container">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <a href="/index.html" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-              <span style="font-family: 'Dancing Script', cursive; font-size: 30px;">QuickPic</span>
+                <span style="font-family: 'Dancing Script', cursive; font-size: 28px;">QuickPic</span>
             </a>
+
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 d-none" name="dashNav">
+                <li><a href="#" class="nav-link px-2 link-dark">Home</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Features</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">About</a></li>
+                </ul>
         
             <div class="col-md-3 text-end">
-              <button type="button" class="btn btn-outline-primary me-2" id="login_button">Login</button>
-              <button type="button" class="btn btn-primary" id="signup_button">Sign up</button>
-            </div>
+            <button type="button" class="btn btn-outline-primary me-2" id="login_button">Login</button>
+            <button type="button" class="btn btn-primary" id="signup_button">Sign up</button>
+            <button type="button" class="btn btn-secondary d-none" id="signOut_button">Sign Out</button>
         </header>
     </div>
+
     <main role="main" class="container">
         <!-- app goes here --> 
-        <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-3" name="sign_page">
+        <div class="row justify-content-center" id="signPage">
+            <div class="col-lg-4 col-md-3">
                 <!-- Login page -->
                 <form name="login" class="row g-3">
                     <h3 class="h3 mb-3 fw-normal text-center">Please Login</h3>
@@ -58,7 +67,7 @@
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                      </div>
+                    </div>
                 </form>
 
                 <!-- signup page -->
@@ -93,26 +102,40 @@
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                      </div>
+                    </div>
                 </form>
             </div>
         </div>
-        
-        <!-- Alert -->
-        <div class="modal fade" id="Alert" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" name="alertTitle" id="alertTitle">Modal title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" name="alertText" id="alertText">
-                        Text
-                    </div>
-                </div>
+
+        <!-- dashboard -->
+        <div class="row justify-content-center d-none" id="dashBoard">
+            <!-- if not feed -->
+            <div class="col-lg-6 col-md-3" name="noFeed">
+                <div class="bg-light p-5 rounded">
+                    <h1>No post yet</h1>
+                    <p class="lead">Post not found, why not make post now?</p>
+                    <a class="btn btn-outline-success" href="#" role="button">Make Post</a>
+                  </div>
             </div>
         </div>
     </main>
+
+    
+
+    <!-- Alert -->
+    <div class="modal fade" id="Alert" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" name="alertTitle" id="alertTitle">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" name="alertText" id="alertText">
+                    Text
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- footer -->
     <footer class="footer fixed-bottom mt-auto py-3 bg-light text-center">

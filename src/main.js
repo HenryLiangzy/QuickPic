@@ -7,25 +7,37 @@ let signup_form = document.forms.signup;
 let myModal = new bootstrap.Modal(document.getElementById('Alert'), {backdrop: true});
 const login_button = document.getElementById("login_button");
 const signup_button = document.getElementById("signup_button");
+const signOut_button =  document.getElementById("signOut_button");
 
 const api = new API('http://localhost:5000');
 
-// Example usage of makeAPIRequest method.
-// api.makeAPIRequest('dummy/user')
-//     .then(r => console.log(r));
+/**
+ * Follow up page control function
+ */
 
-
-function toLogin () {
+const toLogin = () => {
     login_form.classList.remove("d-none");
     signup_form.classList.add("d-none");
     console.log("toLogin()");
 }
 
-function toSignUp () {
+const toSignUp = () => {
     signup_form.classList.remove("d-none");
     login_form.classList.add("d-none");
     console.log("toSignUp()");
 }
+
+const toDashBoard = () => {
+    let nav = document.getElementsByName("dashNav")[0];
+
+    nav.classList.remove("d-none");
+    document.getElementById("dashBoard").classList.remove("d-none");
+    document.getElementById("signPage").classList.add("d-none");
+    login_button.classList.add("d-none");
+    signup_button.classList.add("d-none");
+    signOut_button.classList.remove("d-none");
+}
+
 
 login_button.addEventListener("click", (event) => toLogin());
 signup_button.addEventListener("click", (event) => toSignUp());
@@ -37,6 +49,11 @@ const showAlert = (alertTitle, alertText) => {
 
     myModal.show();
 }
+
+
+/**
+ * Follow up sign in/up function
+ */
 
 
 const login = (username, password) => {
@@ -52,6 +69,7 @@ const login = (username, password) => {
         //login successful
         else{
             console.log(data.token);
+            toDashBoard();
         }
     })
 }
@@ -88,6 +106,7 @@ const signup = (username, password, email, name) => {
         //signup successful
         else{
             console.log(data.token);
+            toDashBoard();
         }
     })
 }
@@ -110,3 +129,6 @@ signup_form.addEventListener("submit", (event) => {
     }
 })
 
+const loadPost = () => {
+
+}

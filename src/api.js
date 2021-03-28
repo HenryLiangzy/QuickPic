@@ -39,4 +39,12 @@ export default class API {
         }
         return getJSON(`${this.url}/${path}`, option);
     }
+
+    /**
+     * @param {String} path
+     * @param {json} data
+     */
+    sendGetRequest(path, data) {
+        
+    }
 }
