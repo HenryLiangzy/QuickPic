@@ -655,11 +655,11 @@ const loadProfile = (type, user_info) => {
                 pro_follow.innerText = `Following: ${data.following.length} | Follower: ${data.followed_num}`
                 pro_email.innerText = data.email;
 
-                if(!login_user_following.indexOf(data.id) && data.id !== login_user_id){
+                if(login_user_following.indexOf(data.id) === -1 && data.id !== login_user_id){
                     pro_button.className = "col-1 btn btn-sm btn-outline-primary"
                     pro_button.innerText = "+"
                 }
-                else if(login_user_following.indexOf(data.id) && data.id !== login_user_id){
+                else if(login_user_following.indexOf(data.id) !== -1 && data.id !== login_user_id){
                     pro_button.className = "col-1 btn btn-sm btn-outline-danger"
                     pro_button.innerText = "-"
                 }
@@ -683,11 +683,11 @@ const loadProfile = (type, user_info) => {
                 pro_follow.innerText = `Following: ${data.following.length} | Follower: ${data.followed_num}`;
                 pro_email.innerText = data.email;
 
-                if(!login_user_following.indexOf(data.id) && data.id !== login_user_id){
+                if(login_user_following.indexOf(data.id) === -1 && data.id !== login_user_id){
                     pro_button.className = "col-1 btn btn-sm btn-outline-primary"
                     pro_button.innerText = "+"
                 }
-                else if(login_user_following.indexOf(data.id) && data.id !== login_user_id){
+                else if(login_user_following.indexOf(data.id) !== -1 && data.id !== login_user_id){
                     pro_button.className = "col-1 btn btn-sm btn-outline-danger"
                     pro_button.innerText = "-"
                 }
@@ -695,6 +695,10 @@ const loadProfile = (type, user_info) => {
                     pro_button.className = "col-1 btn btn-sm btn-outline-light"
                     pro_button.innerText = "x"
                 }
+
+                pro_button.addEventListener('click', (event) => {
+                    clickFollow(user_info, pro_button, data.id)
+                })
 
                 //construct the post
                 data.posts.map((post) => {
@@ -704,9 +708,40 @@ const loadProfile = (type, user_info) => {
         })
     }
 
-    pro_button.addEventListener('click', (event) => {
-
-    })
+    
 }
 
 
+const clickFollow = (author, button, author_id) => {
+    const option = {
+        method: "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + user_token
+        }
+    }
+
+    if(button.innerText === '+'){
+        const result = api.makeAPIRequest(`user/follow?username=${author}`, option).then((data) => {
+            if(data.message === 'success'){
+                //refresh page
+                login_user_following.push(author_id)
+                clearProfilePic();
+                loadProfile(1, author);
+                // button.innerText = '-'
+            }
+        })
+    }
+    else if(button.innerText === '-'){
+        const result = api.makeAPIRequest(`user/unfollow?username=${author}`, option).then((data) => {
+            if(data.message === 'success'){
+                //refresh page
+                login_user_following.splice(login_user_following.indexOf(data.id), 1);
+                clearProfilePic();
+                loadProfile(1, author);
+                // button.innerText = '+'
+            }
+        })
+    }
+}
