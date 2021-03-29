@@ -8,9 +8,14 @@ let myModal = new bootstrap.Modal(document.getElementById('Alert'), {backdrop: t
 const login_button = document.getElementById("login_button");
 const signup_button = document.getElementById("signup_button");
 const signOut_button =  document.getElementById("signOut_button");
+const home_button = document.querySelector("a[name='homePage'");
+const profile_button = document.querySelector("a[name='profilePage'");
+
 
 const api = new API('http://localhost:5000');
 let user_token = undefined;
+let user_name = undefined;
+let login_user_id = '';
 
 /**
  * Follow up page control function
@@ -19,18 +24,17 @@ let user_token = undefined;
 const toLogin = () => {
     login_form.classList.remove("d-none");
     signup_form.classList.add("d-none");
-    console.log("toLogin()");
 }
 
 const toSignUp = () => {
     signup_form.classList.remove("d-none");
     login_form.classList.add("d-none");
-    console.log("toSignUp()");
 }
 
 const toSignOut = () => {
     user_token = undefined;
-
+    toLogin();
+    console.log("toSignOut")
 }
 
 const toDashBoard = () => {
@@ -45,9 +49,22 @@ const toDashBoard = () => {
     signOut_button.classList.remove("d-none");
 }
 
+const toProfile = () => {
+    document.getElementById("profile").classList.remove("d-none")
+    document.getElementById("dashBoard").classList.add("d-none");
+}
+
 
 login_button.addEventListener("click", (event) => toLogin());
 signup_button.addEventListener("click", (event) => toSignUp());
+signOut_button.addEventListener("click", (event) => toSignOut());
+home_button.addEventListener("click", (event) => {
+    toDashBoard();
+    loadFeed(0, 9);
+})
+profile_button.addEventListener("click", (event) => {
+    toProfile();
+})
 
 
 const showAlert = (alertTitle, alertText) => {
@@ -84,8 +101,24 @@ const login = (username, password) => {
         }
         //login successful
         else{
-            console.log(data.token);
+            user_name = username;
             user_token = data.token;
+
+            const option = {
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + user_token
+                }
+            }        
+
+            const getId = api.makeAPIRequest("user", option).then((data) => {
+                if(data.message === undefined){
+                    login_user_id = data.id;
+                }
+            })
+
             toDashBoard();
             loadFeed(0, 9);
         }
@@ -123,9 +156,25 @@ const signup = (username, password, email, name) => {
         }
         //signup successful
         else{
-            console.log(data.token);
+            user_name = username;
             user_token = data.token;
+
+            const option = {
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + user_token
+                }
+            }        
+
+            const getId = api.makeAPIRequest("user", option).then((data) => {
+                if(data.message === undefined){
+                    login_user_id = data.id;
+                }
+            })
             toDashBoard();
+            loadFeed(0, 9);
         }
     })
 }
@@ -174,13 +223,12 @@ const constructLikes = (postId, like_list) => {
     
     const likeBox = document.createElement("p");
     likeBox.className = "text-sm-start";
+    likeBox.setAttribute("name", `LikeBox_${postId}`)
     likeDiv.appendChild(likeBox);
     
     likeBox.innerText = "Like by ";
-    console.log("array:", like_list);
-
+    
     like_list.map((like_usr_id) => {
-        console.log(like_usr_id)
         const option = {
             method: "GET",
             headers: {
@@ -193,9 +241,8 @@ const constructLikes = (postId, like_list) => {
         const result = api.makeAPIRequest(`user/?id=${like_usr_id}`, option).then((data) => {
             if(data.username !== undefined){
                 const spanBox = document.createElement("span");
-                console.log("construct:", data, like_usr_id);
                 spanBox.innerText = data.username+ ", ";
-                spanBox.setAttribute("name", `likeSpan_${postId}_${like_usr_id}`);
+                spanBox.setAttribute("name", `likeSpan_${postId}_${data.username}`);
                 likeBox.appendChild(spanBox);
             }
         });
@@ -218,7 +265,6 @@ const constructComment = (postId, comment_list) => {
         const commenter = document.createElement("div");            // author
         commenter.className = "fw-bold";
         commenter.innerText = comment.author;
-        console.log("author:", commenter.innerText)
         messageDiv.appendChild(commenter);
         const commentText = document.createElement("span");         // text
         commentText.innerText = comment.comment;
@@ -237,6 +283,57 @@ const constructComment = (postId, comment_list) => {
 
     return commentDiv;
 
+}
+
+const clickLike = (postId, button, badge) => {
+    const option = {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + user_token
+        }
+    }
+
+    if(button.value === "Like"){
+        const result = api.makeAPIRequest(`post/like?id=${postId}`, option).then((data) => {
+            if(data.message === "success"){
+                button.innerText = "Unlike";
+                button.value = "Unlike";
+                badge.innerText = parseInt(badge.innerText) + 1;
+
+                // add to list
+                const likeBox = document.querySelector(`p[name='LikeBox_${postId}']`)
+                const spanBox = document.createElement("span");
+                
+                spanBox.innerText = user_name+ ", ";
+                spanBox.setAttribute("name", `likeSpan_${postId}_${user_name}`);
+                likeBox.appendChild(spanBox);
+            }
+            else{
+                showAlert("Like Error", data.message);
+            }
+        })
+    }
+    //dislike
+    else{
+        const result = api.makeAPIRequest(`post/unlike?id=${postId}`, option).then((data) => {
+            if(data.message === "success"){
+                button.innerText = "Like";
+                button.value = "Like";
+                badge.innerText = parseInt(badge.innerText) - 1;
+
+                //remove
+                let spanBox = document.querySelector(`span[name='likeSpan_${postId}_${user_name}']`);
+                spanBox.remove();
+            }
+            else{
+                showAlert("Like Error", data.message);
+            }
+        })
+    }
+
+    
 }
 
 const constructPost = (postID, author, postTime, image_src, likes_list, desc, comment_list) => {
@@ -279,30 +376,47 @@ const constructPost = (postID, author, postTime, image_src, likes_list, desc, co
     const buttonDiv = document.createElement("div");
     buttonDiv.className = "d-flex flex-row my-2";
 
+    const buttonGroup = document.createElement('div');
+    buttonGroup.className = "btn-group";
+
     // for like button and the like numbers
     const likeButton = document.createElement("button");
     likeButton.className = "btn btn-outline-primary";
     likeButton.setAttribute("type", "button");
-    likeButton.innerText = "Like ";
+    likeButton.setAttribute("name", `like_${postID}`);
+
+    if(likes_list.indexOf(login_user_id) == 0){
+        likeButton.setAttribute("value", "Unlike");
+        likeButton.innerText = "Unlike";
+    }
+    else{
+        likeButton.setAttribute("value", "Like");
+        likeButton.innerText = "Like";
+    }
+    buttonGroup.appendChild(likeButton);
+
+    const badge_button = document.createElement("button")
+    badge_button.className = "btn btn-outline-danger"
+    badge_button.setAttribute("type", "button");
+
     const badgeBox = document.createElement("span");
-    badgeBox.className = "badge rounded-pill bg-secondary";
+    badgeBox.className = "badge rounded-pill bg-danger";
+    badgeBox.setAttribute("name", `badge_${postID}`);
     badgeBox.innerText = likes_list.length;
-    likeButton.appendChild(badgeBox);
+    badge_button.appendChild(badgeBox)
 
-    buttonDiv.appendChild(likeButton);
-
-    const commentButton = document.createElement("button");
-    commentButton.className = "btn btn-outline-primary";
-    commentButton.setAttribute("type", "button");
-    commentButton.innerText = "Comment";
-    buttonDiv.appendChild(commentButton);
-
+    buttonGroup.appendChild(badge_button);
+    buttonDiv.appendChild(buttonGroup);
     bodyDiv.appendChild(buttonDiv);
 
-    if(likes_list.length !== 0){
-        const likeDiv = constructLikes(postID, likes_list);
-        bodyDiv.appendChild(likeDiv);
-    }
+    const likeDiv = constructLikes(postID, likes_list);
+    bodyDiv.appendChild(likeDiv);
+    
+
+    likeButton.addEventListener("click", (event) => {
+        clickLike(postID, likeButton, badgeBox);
+    })
+
         
     // for comment
     const comment_num = comment_list.length;
@@ -359,6 +473,7 @@ const loadFeed = (startPage, postNum) => {
         }
     }
 
+
     const result = api.makeAPIRequest(`user/feed?p=${startPage}&n=${postNum}`, option).then((data) => {
         if(data.posts === undefined){
             showAlert("Post Error", data.message);
@@ -395,20 +510,20 @@ const loadFeed = (startPage, postNum) => {
             }
         }
     })
+
 }
 
-const likePost = (postId) => {
-    const option = {
-        method: 'PUT',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': user_token,
-            'id': postId
-        }
-    }
+// const loadProfile = () => {
+//     const option = {
+//         method: "GET",
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//             'Authorization': 'Token ' + user_token
+//         }
+//     }
 
-    const result = api.makeAPIRequest("post/like", option).then((data) => {
-
-    })
-}
+//     const result = api.makeAPIRequest('user', option).then((data) => {
+//         if(data.message === "success"){}
+//     })
+// }
