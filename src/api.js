@@ -63,4 +63,9 @@ export default class API {
         }
         return getJSON(`${this.url}/${path}`, option);
     }
+
+    
+    sendPutRequest(path, option){
+        
+    }
 }

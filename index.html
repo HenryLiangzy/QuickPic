@@ -14,12 +14,14 @@
     <script src="src/bootstrap.min.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="img/favicon.png"/>
 
 </head>
 <body class="d-flex flex-column h-100">
     <!-- This is an example app structure, you can modify this as much as you choose --> 
     <div class="invisible">
-        <div class="p-5 bg-light border">Grid item 1</div>
+        <div class="p-5 bg-light border">Block</div>
+        <div class="p-4 bg-light border d-md-none">Block</div>
     </div>
 
     <div class="container fixed-top">
@@ -30,7 +32,7 @@
 
             <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 d-none" name="dashNav">
                 <li><a href="#" class="nav-link px-2 link-dark">Home</a></li>
-                <li><a href="#" class="nav-link px-2 link-dark">Features</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark">Profile</a></li>
                 <li><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
                 <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
                 </ul>
@@ -122,7 +124,60 @@
             </div>
 
             <!-- for the post thumbnail -->
-            <div class="col-lg-8 col-sm-auto" id="Feed">
+            <div class="col-lg-8 col-md-6 col-sm-auto" id="Feed">
+                <!-- For feed reference -->
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Author Name</h5>
+                        <p class="text-muted">Posting time</p>
+                    </div>
+
+                    <img class="card-img-top img-fluid" src="data:image/jpeg;base64,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">
+                    
+                    <div class="card-body">      
+                        <p class="row card-text text-muted">This is the description</p>
+                        <div class="d-flex flex-row my-2">
+                            <button type="button" class="btn btn-outline-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                    <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                </svg>
+                                <span class="badge rounded-pill bg-secondary">4</span>
+                            </button>
+                            <button type="button" class="btn btn-outline-primary">Comment</button>
+                        </div>      
+                        <!-- <p class="row mt-2 fw-lighter">Comment here</p> -->
+                        <div class="row mt-2">
+                            <p class="text-sm-start">Like by xxx, xxx, xxx</p>
+                        </div>
+
+                        <ol class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                              <div class="ms-2 me-auto">
+                                <div class="fw-bold">Andrew</div>
+                                Comment 1
+                              </div>
+                              <span class="badge bg-light rounded-pill text-dark">14:21</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                  <div class="fw-bold">Andrew</div>
+                                  Comment 1
+                                </div>
+                                <span class="badge bg-light rounded-pill text-dark">14:21</span>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="card-footer">
+                        <form class="row g-2">
+                            <input class="col-auto form-control" type="text" name="comment" placeholder="Comment here">
+                            <button class="col-auto btn btn-outline-primary" type="button">Send</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="invisible p-2">====</div>
+                
             </div>
         </div>
 

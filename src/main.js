@@ -148,9 +148,66 @@ signup_form.addEventListener("submit", (event) => {
     }
 })
 
-const constructPost = (author, postTime, image_src, likes, desc, comment_num) => {
+const getUserNameListById = (id) => {
+    const option = {
+        method: "GET",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + user_token,
+            'id': id
+        }
+    }
+
+    let username_list = [];
+    
+
+    return username_list
+}
+
+const constructLikes = (postId, like_list) => {
+    const likeDiv = document.createElement("div");
+    likeDiv.className = "row mt-2";
+    
+    const likeBox = document.createElement("p");
+    likeBox.className = "text-sm-start";
+    likeDiv.appendChild(likeBox);
+    
+    likeBox.innerText = "Like by ";
+
+    like_list.map((like_usr_id) => {
+        const option = {
+            method: "GET",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + user_token,
+                'id': like_usr_id
+            }
+        }
+        
+        const result = api.makeAPIRequest('user', option).then((data) => {
+            if(data.username !== undefined){
+                const spanBox = document.createElement("span");
+                spanBox.innerText = data.username;
+                spanBox.setAttribute("name", `likeSpan_${postId}_${like_usr_id}`);
+                likeBox.appendChild(spanBox);
+            }
+        })
+    })
+
+    return likeDiv;
+}
+
+const constructComment = (postId, comment_list) => {
+    const commentDiv = document.createElement("div");
+}
+
+const constructPost = (postID, author, postTime, image_src, likes_list, desc, comment_num) => {
+    
     const postDiv = document.createElement("div");
     postDiv.className = "card";
+    postDiv.setAttribute("name", `postId${postID}`);
 
     // post heading part
     const authorDiv = document.createElement("div");
@@ -167,10 +224,9 @@ const constructPost = (author, postTime, image_src, likes, desc, comment_num) =>
 
     postDiv.appendChild(authorDiv);
 
-
     //image
     const imageBox = document.createElement("img");
-    imageBox.className = "img-fluid";
+    imageBox.className = "card-img-top";
     imageBox.setAttribute("src", `data:image/jpeg;base64,${image_src}`);
     postDiv.appendChild(imageBox);
 
@@ -191,10 +247,10 @@ const constructPost = (author, postTime, image_src, likes, desc, comment_num) =>
     const likeButton = document.createElement("button");
     likeButton.className = "btn btn-outline-primary";
     likeButton.setAttribute("type", "button");
-    likeButton.innerText = "Like";
+    likeButton.innerText = "Like ";
     const badgeBox = document.createElement("span");
     badgeBox.className = "badge rounded-pill bg-secondary";
-    badgeBox.innerText = likes;
+    badgeBox.innerText = likes_list.length;
     likeButton.appendChild(badgeBox);
 
     buttonDiv.appendChild(likeButton);
@@ -207,7 +263,13 @@ const constructPost = (author, postTime, image_src, likes, desc, comment_num) =>
 
     bodyDiv.appendChild(buttonDiv);
 
+    if(likes_list.length !== 0){
+        const likeDiv = constructLikes(postID, likes_list);
+        bodyDiv.appendChild(likeDiv);
+    }
+        
     // for comment
+    console.log("still skip")
     const commentBox = document.createElement("p");
     commentBox.className = "row mt-2 fw-lighter";
     commentBox.innerText = `There are ${comment_num} comments.`;
@@ -218,6 +280,7 @@ const constructPost = (author, postTime, image_src, likes, desc, comment_num) =>
     postDiv.appendChild(bodyDiv);
 
     return postDiv;
+    
 }
 
 const loadFeed = (startPage, postNum) => {
@@ -250,10 +313,11 @@ const loadFeed = (startPage, postNum) => {
                 posts.map((post) => {
                     console.log(post);
                     const postCard = constructPost(
+                        post.id,
                         post.meta.author,
                         convertTime(post.meta.published),
                         post.src,
-                        post.meta.likes.length,
+                        post.meta.likes,
                         post.meta.description_text,
                         post.comments.length
                     );
@@ -269,4 +333,18 @@ const loadFeed = (startPage, postNum) => {
     })
 }
 
+const likePost = (postId) => {
+    const option = {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': user_token,
+            'id': postId
+        }
+    }
 
+    const result = api.makeAPIRequest("post/like", option).then((data) => {
+
+    })
+}
