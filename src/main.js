@@ -9,8 +9,9 @@ let modal_display = new bootstrap.Modal(document.getElementById('modal_display')
 const login_button = document.getElementById("login_button");
 const signup_button = document.getElementById("signup_button");
 const signOut_button =  document.getElementById("signOut_button");
-const home_button = document.querySelector("a[name='homePage'");
-const profile_button = document.querySelector("a[name='profilePage'");
+const home_button = document.querySelector("a[name='homePage']");
+const profile_button = document.querySelector("a[name='profilePage']");
+const uploadPage_button = document.querySelector("a[name='UploadPage']");
 
 
 const api = new API('http://localhost:5000');
@@ -37,7 +38,7 @@ const toSignUp = () => {
 }
 
 const toSignPage = () => {
-    document.getElementById('signPage').classList.remove('d-none');
+    document.getElementById('signPage').className = "row justify-content-center d-flex"
     document.getElementById('dashBoard').classList.add('d-none');
     document.getElementById('Feed').classList.add('d-none');
 }
@@ -79,8 +80,17 @@ const toDashBoard = () => {
 }
 
 const toProfile = () => {
-    document.getElementById("profile").classList.remove("d-none")
-    document.getElementById("dashBoard").classList.add("d-none");
+    document.getElementById("signPage").className = "row justify-content-center d-flex d-none"
+    document.getElementById("dashBoard").className = "row justify-content-center d-none"
+    document.getElementById("profile").className = "row justify-content-center d-flex"
+    document.getElementById("uploadPage").className = "row justify-content-center d-flex d-none"
+}
+
+const toUpload = () => {
+    document.getElementById("signPage").className = "row justify-content-center d-flex d-none"
+    document.getElementById("dashBoard").className = "row justify-content-center d-none"
+    document.getElementById("profile").className = "row justify-content-center d-flex d-none"
+    document.getElementById("uploadPage").className = "row justify-content-center d-flex"
 }
 
 
