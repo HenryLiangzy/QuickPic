@@ -15,7 +15,9 @@ const profile_button = document.querySelector("a[name='profilePage'");
 const api = new API('http://localhost:5000');
 let user_token = undefined;
 let user_name = undefined;
-let login_user_id = '';
+let login_user_id = undefined;
+let login_user_following = undefined;
+let last_page = 0
 
 /**
  * Follow up page control function
@@ -24,29 +26,55 @@ let login_user_id = '';
 const toLogin = () => {
     login_form.classList.remove("d-none");
     signup_form.classList.add("d-none");
+    last_page = 0;
 }
 
 const toSignUp = () => {
     signup_form.classList.remove("d-none");
     login_form.classList.add("d-none");
+    last_page = 0;
+}
+
+const toSignPage = () => {
+    document.getElementById('signPage').classList.remove('d-none');
+    document.getElementById('dashBoard').classList.add('d-none');
+    document.getElementById('Feed').classList.add('d-none');
 }
 
 const toSignOut = () => {
     user_token = undefined;
-    toLogin();
-    console.log("toSignOut")
+    user_name = undefined;
+    login_user_id = '';
+    last_page = 0;
+
+    if(last_page === 1){
+        clearPost();
+        toSignPage();
+    }
+    else if(last_page === 2){
+        clearProfilePic();
+        toSignPage();
+    }
 }
 
 const toDashBoard = () => {
-    let nav = document.getElementsByName("dashNav")[0];
+    if(last_page === 0){
+        let nav = document.getElementsByName("dashNav")[0];
 
-    nav.classList.remove("d-none");
-    document.getElementById("dashBoard").classList.remove("d-none");
-    document.getElementById("signPage").classList.add("d-none");
-    
-    login_button.classList.add("d-none");
-    signup_button.classList.add("d-none");
-    signOut_button.classList.remove("d-none");
+        nav.classList.remove("d-none");
+        document.getElementById("dashBoard").classList.remove("d-none");
+        document.getElementById("signPage").classList.add("d-none");
+        
+        login_button.classList.add("d-none");
+        signup_button.classList.add("d-none");
+        signOut_button.classList.remove("d-none");
+    }
+    else if(last_page === 2){
+        document.getElementById('profile').classList.add('d-none');
+        document.getElementById("dashBoard").classList.remove("d-none");
+    }
+
+    last_page = 1
 }
 
 const toProfile = () => {
@@ -55,15 +83,56 @@ const toProfile = () => {
 }
 
 
+const clearPost = () => {
+    const dashBoard = document.getElementById('dashBoard');
+    let feed = document.getElementById('Feed')
+
+    feed.remove()
+
+    const new_feed = document.createElement('div')
+    new_feed.className = "col-lg-8 col-md-6 col-sm-auto"
+    new_feed.setAttribute('id', 'Feed');
+
+    dashBoard.appendChild(new_feed)
+    
+}
+
+const clearProfilePic = () => {
+    const pro_pic = document.querySelector("div[name='profile_pic']")
+    
+    while(pro_pic.firstChild){
+        pro_pic.removeChild(pro_pic.firstChild)
+    }
+}
+
+
 login_button.addEventListener("click", (event) => toLogin());
 signup_button.addEventListener("click", (event) => toSignUp());
 signOut_button.addEventListener("click", (event) => toSignOut());
 home_button.addEventListener("click", (event) => {
-    toDashBoard();
-    loadFeed(0, 9);
+    if(last_page === 0){
+        toDashBoard();
+        loadFeed(0, 9);
+    }
+    else if(last_page === 2){
+        clearProfilePic();
+        toDashBoard();
+        loadFeed(0, 9);
+    }
 })
 profile_button.addEventListener("click", (event) => {
-    toProfile();
+    if(last_page === 1){
+        clearPost()
+        toProfile();
+        loadProfile(0);
+    }
+
+    else if(last_page === 2){
+        clearProfilePic();
+        loadProfile(0);
+    }
+    
+    last_page = 2
 })
 
 
@@ -114,8 +183,9 @@ const login = (username, password) => {
             }        
 
             const getId = api.makeAPIRequest("user", option).then((data) => {
-                if(data.message === undefined){
+                if(data.id !== undefined){
                     login_user_id = data.id;
+                    login_user_following = data.following;
                 }
             })
 
@@ -169,8 +239,9 @@ const signup = (username, password, email, name) => {
             }        
 
             const getId = api.makeAPIRequest("user", option).then((data) => {
-                if(data.message === undefined){
+                if(data.id !== undefined){
                     login_user_id = data.id;
+                    login_user_following = data.following;
                 }
             })
             toDashBoard();
@@ -336,22 +407,31 @@ const clickLike = (postId, button, badge) => {
     
 }
 
+
 const constructPost = (postID, author, postTime, image_src, likes_list, desc, comment_list) => {
     
     const postDiv = document.createElement("div");
-    postDiv.className = "card";
+    postDiv.className = "card ass-post";
     postDiv.setAttribute("name", `postId${postID}`);
 
     // post heading part
     const authorDiv = document.createElement("div");
     authorDiv.className = "card-header";
 
-    const authorBox = document.createElement("h5");
+    const authorBox = document.createElement("button");
+    authorBox.className = "btn btn-light";
     authorBox.innerText = author;
     authorDiv.appendChild(authorBox)
 
+    authorBox.addEventListener('click', (event) => {
+        clearPost()
+        toProfile();
+        loadProfile(1, author);
+        last_page = 2;
+    })
+
     const timeBox = document.createElement("p");
-    timeBox.className = "text-muted";
+    timeBox.className = "fw-light text-muted";
     timeBox.innerText = postTime;
     authorDiv.appendChild(timeBox);
 
@@ -473,7 +553,6 @@ const loadFeed = (startPage, postNum) => {
         }
     }
 
-
     const result = api.makeAPIRequest(`user/feed?p=${startPage}&n=${postNum}`, option).then((data) => {
         if(data.posts === undefined){
             showAlert("Post Error", data.message);
@@ -490,7 +569,6 @@ const loadFeed = (startPage, postNum) => {
             else{
                 const feed_area = document.getElementById("Feed");
                 posts.map((post) => {
-                    console.log(post);
                     const postCard = constructPost(
                         post.id,
                         post.meta.author,
@@ -510,20 +588,125 @@ const loadFeed = (startPage, postNum) => {
             }
         }
     })
-
 }
 
-// const loadProfile = () => {
-//     const option = {
-//         method: "GET",
-//         headers: {
-//             'Accept': 'application/json',
-//             'Content-Type': 'application/json',
-//             'Authorization': 'Token ' + user_token
-//         }
-//     }
+const constructProfilePost = (postId, parentNode) => {
+    const colDiv = document.createElement("div")
+    colDiv.className = 'col ass-pro-pic'
 
-//     const result = api.makeAPIRequest('user', option).then((data) => {
-//         if(data.message === "success"){}
-//     })
-// }
+    const shadowDiv = document.createElement('div')
+    shadowDiv.className = 'card shadow-sm'
+
+    const option = {
+        method: "GET",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + user_token
+        }
+    }
+
+    const result = api.makeAPIRequest(`post/?id=${postId}`, option).then((data) => {
+        const imgBox = document.createElement('img')
+        imgBox.className = 'bd-placeholder-img card-img-top'
+        imgBox.setAttribute('src', `data:image/jpeg;base64,${data.thumbnail}`)
+        shadowDiv.appendChild(imgBox);
+
+        const descDiv = document.createElement('div')
+        descDiv.className = 'card-body'
+        const descBox = document.createElement('p')
+        descBox.className = 'card-text'
+        descBox.innerText = data.meta.description_text
+        descDiv.appendChild(descBox)
+        shadowDiv.appendChild(descDiv)
+
+        colDiv.appendChild(shadowDiv)
+
+        parentNode.appendChild(colDiv)
+    })
+}
+
+const loadProfile = (type, user_info) => {
+    const pro_name = document.querySelector("h3[name='profile_name']");
+    const pro_username = document.querySelector("p[name='profile_username']")
+    const pro_follow = document.querySelector("p[name='profile_follow']")
+    const pro_email = document.querySelector("a[name='profile_email']")
+    const pro_pic = document.querySelector("div[name='profile_pic']")
+    const pro_button = document.querySelector("button[name='profile_button']")
+
+    const option = {
+        method: "GET",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + user_token
+        }
+    }
+
+    if(type === 0){
+        if(user_info === undefined){
+            user_info = login_user_id;
+        }
+
+        const result = api.makeAPIRequest(`user/?id=${user_info}`, option).then((data) => {
+            if(data.username !== undefined){
+                pro_name.innerText = `Hi, ${data.name}`;
+                pro_username.innerText = ` @${data.username}`
+                pro_follow.innerText = `Following: ${data.following.length} | Follower: ${data.followed_num}`
+                pro_email.innerText = data.email;
+
+                if(!login_user_following.indexOf(data.id) && data.id !== login_user_id){
+                    pro_button.className = "col-1 btn btn-sm btn-outline-primary"
+                    pro_button.innerText = "+"
+                }
+                else if(login_user_following.indexOf(data.id) && data.id !== login_user_id){
+                    pro_button.className = "col-1 btn btn-sm btn-outline-danger"
+                    pro_button.innerText = "-"
+                }
+                else{
+                    pro_button.className = "col-1 btn btn-sm btn-outline-light"
+                    pro_button.innerText = "x"
+                }
+    
+                //construct the post
+                data.posts.map((post) => {
+                    constructProfilePost(post, pro_pic)
+                })
+            }
+        })
+    }
+    else{
+        const result = api.makeAPIRequest(`user/?username=${user_info}`, option).then((data) => {
+            if(data.username !== undefined){
+                pro_name.innerText = `Hi, ${data.name}`;
+                pro_username.innerText = ` @${data.username}`;
+                pro_follow.innerText = `Following: ${data.following.length} | Follower: ${data.followed_num}`;
+                pro_email.innerText = data.email;
+
+                if(!login_user_following.indexOf(data.id) && data.id !== login_user_id){
+                    pro_button.className = "col-1 btn btn-sm btn-outline-primary"
+                    pro_button.innerText = "+"
+                }
+                else if(login_user_following.indexOf(data.id) && data.id !== login_user_id){
+                    pro_button.className = "col-1 btn btn-sm btn-outline-danger"
+                    pro_button.innerText = "-"
+                }
+                else{
+                    pro_button.className = "col-1 btn btn-sm btn-outline-light"
+                    pro_button.innerText = "x"
+                }
+
+                //construct the post
+                data.posts.map((post) => {
+                    constructProfilePost(post, pro_pic)
+                })
+            }
+        })
+    }
+
+    pro_button.addEventListener('click', (event) => {
+
+    })
+}
+
+
