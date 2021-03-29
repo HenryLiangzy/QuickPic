@@ -159,10 +159,13 @@ const getUserNameListById = (id) => {
         }
     }
 
-    let username_list = [];
+    const result = api.makeAPIRequest("user", option).then((data) => {
+        if(data.username !== undefined){
+            return data.username;
+        }
+    })
     
-
-    return username_list
+    return undefined; 
 }
 
 const constructLikes = (postId, like_list) => {
@@ -174,36 +177,69 @@ const constructLikes = (postId, like_list) => {
     likeDiv.appendChild(likeBox);
     
     likeBox.innerText = "Like by ";
+    console.log("array:", like_list);
 
     like_list.map((like_usr_id) => {
+        console.log(like_usr_id)
         const option = {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': 'Token ' + user_token,
-                'id': like_usr_id
             }
         }
         
-        const result = api.makeAPIRequest('user', option).then((data) => {
+        const result = api.makeAPIRequest(`user/?id=${like_usr_id}`, option).then((data) => {
             if(data.username !== undefined){
                 const spanBox = document.createElement("span");
-                spanBox.innerText = data.username;
+                console.log("construct:", data, like_usr_id);
+                spanBox.innerText = data.username+ ", ";
                 spanBox.setAttribute("name", `likeSpan_${postId}_${like_usr_id}`);
                 likeBox.appendChild(spanBox);
             }
-        })
+        });
     })
 
     return likeDiv;
 }
 
 const constructComment = (postId, comment_list) => {
-    const commentDiv = document.createElement("div");
+    const commentDiv = document.createElement("ol");
+    commentDiv.className = "list-group";
+
+    comment_list.map((comment) => {
+        const commentLi = document.createElement('li');
+        commentLi.className = "list-group-item d-flex justify-content-between align-items-start";
+
+        //text part
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "ms-2 me-auto";
+        const commenter = document.createElement("div");            // author
+        commenter.className = "fw-bold";
+        commenter.innerText = comment.author;
+        console.log("author:", commenter.innerText)
+        messageDiv.appendChild(commenter);
+        const commentText = document.createElement("span");         // text
+        commentText.innerText = comment.comment;
+        messageDiv.appendChild(commentText);
+        commentLi.appendChild(messageDiv);
+
+        //timestamp
+        const timeStamp = document.createElement("span");
+        timeStamp.className = "badge bg-light rounded-pill text-dark";
+        timeStamp.innerText = convertTime(comment.published);
+        commentLi.appendChild(timeStamp)
+
+        //add to main
+        commentDiv.appendChild(commentLi);
+    });
+
+    return commentDiv;
+
 }
 
-const constructPost = (postID, author, postTime, image_src, likes_list, desc, comment_num) => {
+const constructPost = (postID, author, postTime, image_src, likes_list, desc, comment_list) => {
     
     const postDiv = document.createElement("div");
     postDiv.className = "card";
@@ -269,15 +305,45 @@ const constructPost = (postID, author, postTime, image_src, likes_list, desc, co
     }
         
     // for comment
-    console.log("still skip")
-    const commentBox = document.createElement("p");
-    commentBox.className = "row mt-2 fw-lighter";
-    commentBox.innerText = `There are ${comment_num} comments.`;
+    const comment_num = comment_list.length;
+    if(comment_num === 0){
+        const commentBox = document.createElement("p");
+        commentBox.className = "row mt-2 fw-lighter";
+        commentBox.innerText = `There are ${comment_num} comments.`;
 
-    bodyDiv.appendChild(commentBox);
+        bodyDiv.appendChild(commentBox);
+    }
+    else{
+        const commentBox = constructComment(postID, comment_list);
+        bodyDiv.appendChild(commentBox);
+    }
+
+    //body append
+    postDiv.appendChild(bodyDiv);
+
+    //footer construct
+    const footerDiv = document.createElement("div");
+    footerDiv.className = "card-footer";
+    const formBox = document.createElement("form");
+    formBox.className = "row g-2";
+
+    //form component
+    const inputBox = document.createElement("input");
+    inputBox.className = "col-auto form-control";
+    inputBox.setAttribute("type", "text");
+    inputBox.setAttribute("name", "comment");
+    inputBox.setAttribute('placeholder', 'Leave a comment here');
+    formBox.appendChild(inputBox);
+
+    const buttonBox = document.createElement("button");
+    buttonBox.className = "col-auto btn btn-outline-primary";
+    buttonBox.setAttribute("type", "button");
+    buttonBox.innerText = "Send";
+    formBox.appendChild(buttonBox);
 
     //final
-    postDiv.appendChild(bodyDiv);
+    footerDiv.appendChild(formBox);
+    postDiv.appendChild(footerDiv);
 
     return postDiv;
     
@@ -289,13 +355,11 @@ const loadFeed = (startPage, postNum) => {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': 'Token ' + user_token,
-            'p': startPage,
-            'n': postNum
+            'Authorization': 'Token ' + user_token
         }
     }
 
-    const result = api.makeAPIRequest("user/feed", option).then((data) => {
+    const result = api.makeAPIRequest(`user/feed?p=${startPage}&n=${postNum}`, option).then((data) => {
         if(data.posts === undefined){
             showAlert("Post Error", data.message);
         }
@@ -319,7 +383,7 @@ const loadFeed = (startPage, postNum) => {
                         post.src,
                         post.meta.likes,
                         post.meta.description_text,
-                        post.comments.length
+                        post.comments
                     );
                     feed_area.appendChild(postCard);
 

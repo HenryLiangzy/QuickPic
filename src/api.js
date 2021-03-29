@@ -65,7 +65,4 @@ export default class API {
     }
 
     
-    sendPutRequest(path, option){
-        
-    }
 }
