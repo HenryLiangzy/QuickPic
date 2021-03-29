@@ -5,6 +5,7 @@ import { fileToDataUrl } from './helpers.js';
 let login_form = document.forms.login;
 let signup_form = document.forms.signup;
 let myModal = new bootstrap.Modal(document.getElementById('Alert'), {backdrop: true});
+let modal_display = new bootstrap.Modal(document.getElementById('modal_display'), {backdrop: true});
 const login_button = document.getElementById("login_button");
 const signup_button = document.getElementById("signup_button");
 const signOut_button =  document.getElementById("signOut_button");
@@ -633,6 +634,8 @@ const loadProfile = (type, user_info) => {
     const pro_email = document.querySelector("a[name='profile_email']")
     const pro_pic = document.querySelector("div[name='profile_pic']")
     const pro_button = document.querySelector("button[name='profile_button']")
+    let data_following = undefined;
+
 
     const option = {
         method: "GET",
@@ -654,6 +657,7 @@ const loadProfile = (type, user_info) => {
                 pro_username.innerText = ` @${data.username}`
                 pro_follow.innerText = `Following: ${data.following.length} | Follower: ${data.followed_num}`
                 pro_email.innerText = data.email;
+                data_following = data.following;
 
                 if(login_user_following.indexOf(data.id) === -1 && data.id !== login_user_id){
                     pro_button.className = "col-1 btn btn-sm btn-outline-primary"
@@ -667,7 +671,8 @@ const loadProfile = (type, user_info) => {
                     pro_button.className = "col-1 btn btn-sm btn-outline-light"
                     pro_button.innerText = "x"
                 }
-    
+
+                
                 //construct the post
                 data.posts.map((post) => {
                     constructProfilePost(post, pro_pic)
@@ -682,6 +687,7 @@ const loadProfile = (type, user_info) => {
                 pro_username.innerText = ` @${data.username}`;
                 pro_follow.innerText = `Following: ${data.following.length} | Follower: ${data.followed_num}`;
                 pro_email.innerText = data.email;
+                data_following = data.following;
 
                 if(login_user_following.indexOf(data.id) === -1 && data.id !== login_user_id){
                     pro_button.className = "col-1 btn btn-sm btn-outline-primary"
@@ -700,6 +706,7 @@ const loadProfile = (type, user_info) => {
                     clickFollow(user_info, pro_button, data.id)
                 })
 
+
                 //construct the post
                 data.posts.map((post) => {
                     constructProfilePost(post, pro_pic)
@@ -708,8 +715,14 @@ const loadProfile = (type, user_info) => {
         })
     }
 
+    pro_follow.addEventListener('click', (event) => {
+        console.log("listener add 1")
+        clickFollowing(data_following);
+    }, {once: true})
     
 }
+
+
 
 
 const clickFollow = (author, button, author_id) => {
@@ -744,4 +757,40 @@ const clickFollow = (author, button, author_id) => {
             }
         })
     }
+}
+
+
+const clickFollowing = (follow_list) => {
+    console.log("follow list:", follow_list)
+    const modal_text = document.getElementById('modalText');
+    const modal_title = document.getElementById('modalTitle');
+
+    //clear the modal text
+    while(modal_text.firstChild){
+        modal_text.removeChild(modal_text.firstChild);
+    }
+
+    console.log(modal_text);
+
+    const option = {
+        method: "GET",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + user_token
+        }
+    }
+
+    modal_title.innerText = "People following";
+    follow_list.map((the_follow) => {
+        const result = api.makeAPIRequest(`user/?id=${the_follow}`, option).then((data) => {
+            if(data.username !== undefined){
+                const spanBox = document.createElement('span')
+                spanBox.innerText = data.username + ', '
+                modal_text.appendChild(spanBox);
+            }
+        })
+    })
+
+    modal_display.show();
 }
